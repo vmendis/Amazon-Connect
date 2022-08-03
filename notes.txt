@@ -1,0 +1,48 @@
+Define Hours of Operation
+
+Populate Hours of operation of our company.
+Routing > Hours of operation
+      Add new hours
+      Set Name as "EmployeeBooking_DefaultHours"
+
+
+Create two Queues
+
+Routing > Queues
+1st queue name to be "EmployeeBooking_Authenticated"
+2nd queue name to be "EmployeeBooking_Unknown"
+
+
+Create a Routing Profile
+Users > Routing Profiles
+
+Name the routing profile as "EmployeeBooking_Default
+
+User Creation
+
+We are creating an Agent who will answer the telephone calls.
+
+Users > User Management 
+
+Create Contact Flows
+
+We are going to build two new contact flows (EmployeeBooking_TransferToQueue & EmployeBooking_MainFlow) 
+and use one default contact flow (Default Customer Queue) to build the scenario as per below.
+
+When a caller calls the contact center, EmployeeBooking_Mainflow will play welcome message and 
+sets the working queue. Further it will check hours of operations, set the call recording 
+behaviour for both agent and customer and plays the wait treatment music.
+
+Contact Flow EmployeeBooking_TransferToQueue. 
+    See Call Flow-1.png.
+    Code is in ./Code/EmployeeBooking_TransferToQueue
+
+    
+
+
+
+
+
+
+
+
