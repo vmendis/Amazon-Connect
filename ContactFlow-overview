@@ -1,0 +1,8 @@
+We are going to build two new contact flows (EmployeeBooking_TransferQueue & EmployeBooking_MainFlow) 
+and use one default contact flow (Default Customer Queue) to build the scenario as per below.
+
+When a caller calls the contact center, EmployeeBooking_Mainflow will play welcome message and 
+sets the working queue. Further it will check hours of operations, set the call recording 
+behaviour for both agent and customer and plays the wait treatment music.
+
+
