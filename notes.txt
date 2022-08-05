@@ -34,6 +34,12 @@ sets the working queue. Further it will check hours of operations, set the call 
 behaviour for both agent and customer and plays the wait treatment music.
 
 Contact Flows:
+
+  0.  EmployeeBooking_AgentWhisper
+      See  https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module3/whisperflow
+      Code is in : ./Code/EmployeeBooking_AgentWhisper
+
+
   1.  EmployeeBooking_TransferToQueue. 
       See Call Flow-1.png.
       Code is in ./Code/EmployeeBooking_TransferToQueue
@@ -42,6 +48,7 @@ Contact Flows:
 
   3. EmployeeBooking_MainFlow - In this module, our main flow will stay simple, giving a welcome message
      and transferring to our EmployeeBooking_TransferToQueue flow, which we created earlier.
+     Code is in ./Code/EmployeeBooking_MainFlow
 
      Before the welcome message, we want to give a ‘chime’, which will be uploaded as a static announcement (prompt).
 
@@ -52,6 +59,25 @@ Contact Flows:
         here https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module1/contactflows/contanctflowmainflow 
         as the recording.
 
+     b. Connect main Contact Flow to our Phone Number
+        Chanells --> Phone Numbers
+
+   4. Add notes about testing the call flow
+      You should be able to hear the Welcome Chime, Welcome Message, Queue Message, and music while waiting in the queue
+
+
+Amazon Connect and Amazon Lex - Skipping this as of 5.Aug.2022. Do this step later on.
+
+
+Creating Lambda
+
+Improve the contact flow created in the previous module by designing an Amazon Connect dynamic flow, allow employee
+authentication, and greet and transfer authenticated employees to designated queue. We will use AWS Lambda and
+Amazon DynamoDB for the purpose.
+
+Follow steps in https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module3
+
+"Setup Greeting (Whisperflow)" is already is in our code. So skip this step.
 
 
 
