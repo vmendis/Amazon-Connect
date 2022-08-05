@@ -33,11 +33,30 @@ When a caller calls the contact center, EmployeeBooking_Mainflow will play welco
 sets the working queue. Further it will check hours of operations, set the call recording 
 behaviour for both agent and customer and plays the wait treatment music.
 
-Contact Flow EmployeeBooking_TransferToQueue. 
-    See Call Flow-1.png.
-    Code is in ./Code/EmployeeBooking_TransferToQueue
+Contact Flows:
+  1.  EmployeeBooking_TransferToQueue. 
+      See Call Flow-1.png.
+      Code is in ./Code/EmployeeBooking_TransferToQueue
 
-    
+  2. Default Customer Queue is used as the wait treatment by our two queues. 
+
+  3. EmployeeBooking_MainFlow - In this module, our main flow will stay simple, giving a welcome message
+     and transferring to our EmployeeBooking_TransferToQueue flow, which we created earlier.
+
+     Before the welcome message, we want to give a ‘chime’, which will be uploaded as a static announcement (prompt).
+
+     a. create a prompt
+        Routing>Prompts
+        Prompt name : WelcomeChime
+        Use the Welcome Chime from ./Code or from 
+        here https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module1/contactflows/contanctflowmainflow 
+        as the recording.
+
+
+
+
+
+
 
 
 
