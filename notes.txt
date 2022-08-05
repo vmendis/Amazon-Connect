@@ -80,6 +80,8 @@ Follow steps in https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-
 "Setup Greeting (Whisperflow)" is already is in our code. So skip this step.
 
 
+Whisper message I heard : EmployeeBooking Unknown
+
 
 
 
