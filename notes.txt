@@ -113,7 +113,26 @@ Understanding the contact flow:
 
    4. If our Lambda function returns “2” – Ask for PIN, we are going to play the Welcome message first, greeting the employee by their name.
 
+      Note: We are using the Amazon Polly text-to-speech engine, and simply providing the employee’s name as an external attribute, received from
+      our Lambda function ($.External.EmployeeName).
 
+   5. In the next step, we are asking for their PIN, by using Store Customer Input node:
+
+   6. Using the stored customer input, we are going to invoke our Lambda function once again, trying to authenticate our caller. In this case, we are
+      passing 2 parameters: Customer Number (as PhoneNumber) and System> Stored Customer Input (as EmployeePIN).
+
+      Note: You will need to update the ARN field with your own Lambda ARN.
+
+   7. Next step is to check the result of our Lambda function. If it fails, we are going to set Contact Attribute EmployeeLookup=EmployeePIN-Error, 
+      which will help us to trace errors with Lambda function. We are expecting to get either “1” (Employee Authenticated) or “3” (Wrong PIN). If 
+      we don’t get any of these, we are taking the fail path with setting the EmployeeLookup=EmployeePIN-Error.
+
+   8. If the employee has been successfully authenticated (EmployeeType=1), we are setting the Contact Attributes and playing the Successful 
+      Authentication message.
+
+   9. In the next step, since this is a successfully authenticated employee, we want to Set working queue as EmployeeBooking_Autenticated.
+
+   
 
 
 
