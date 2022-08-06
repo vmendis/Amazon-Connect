@@ -84,6 +84,34 @@ Whisper message I heard : EmployeeBooking Unknown
 
 
 
+------------
+EmployeeBooking_Authentication contact flow
+
+Modify "Invoke AWS Lambda function"
+    Update the ARN field with your own Lambda ARN
+
+
+Understanding the contact flow:
+
+   1. The Lambda function can either be a success, or it can return an error.
+   If the Lambda function fails, we are going to set a Contact Attribute, which can be used later in the flow, displayed in agent
+   application or stored in Contact Trace Records. In this case, we want to track what happened with the authentication process, hence 
+   setting EmployeeLookup=PhoneNumber-Failed (which means that we tried to find the employee by phone number, but there was an error)
+
+
+   2. If Lambda was successful, we have to check the result returned by Lambda. In our case, we want the attribute External > EmployeeType. Expecting results:
+
+    Unknown phone number (EmployeeType = 0) or
+    Existing Phone Number,
+
+   but the employee has to enter EmployeePIN (EmployeeType = 2).
+
+   If we get anything else (EmployeeType not 0 nor 2), we are taking the fail path from point number 1.
+
+   3. If our Lambda function returns Unknown, we are going to set the Contact Attribute, and move to the next step in our scenario – ask
+      the customer for their EmployeeID (see point number 24).
+
+   4. If our Lambda function returns “2” – Ask for PIN, we are going to play the Welcome message first, greeting the employee by their name.
 
 
 
