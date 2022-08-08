@@ -1,3 +1,8 @@
+As of 8.aug.2022, EmployeeBooking_LexBot contact flow has not been implemented
+
+
+
+
 Define Hours of Operation
 
 Populate Hours of operation of our company.
@@ -171,6 +176,15 @@ Understanding the contact flow:
   22. Otherwise, we are disconnecting the call, after an error message
 
   
+
+Connecting Flows
+
+I have modifed the tutorial "EmployeeBooking_Authentication" to not to call the EmployeeBooking_LexBot.
+
+1st Added a play prompt to say "Employee have successfully authenticated. Not calling Lex Bot, terminating the call"
+
+2nd. Added a play prompt to say "Hi, $.External.EmployeeName . You have successfully authenticated. Not calling Lex Bot. Call is Terminated"
+
 
 
 
