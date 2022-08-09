@@ -73,3 +73,9 @@ Response
 }
 
 
+
+Testing
+
+1. Known phone number --> Asks for PIN -- > Enter PIN --> "Employee have successfully authenticated. Not calling Lex Bot, terminating the call"
+
+2. Known phone number --> Asks for PIN -- > Enter WRONG PIN --> "Sorry Pin invalid"  --> Press 1 for an Agent"

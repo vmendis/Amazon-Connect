@@ -179,11 +179,16 @@ Understanding the contact flow:
 
 Connecting Flows
 
+Notes:
 I have modifed the tutorial "EmployeeBooking_Authentication" to not to call the EmployeeBooking_LexBot.
 
 1st Added a play prompt to say "Employee have successfully authenticated. Not calling Lex Bot, terminating the call"
-
 2nd. Added a play prompt to say "Hi, $.External.EmployeeName . You have successfully authenticated. Not calling Lex Bot. Call is Terminated"
+
+
+As a final step in this module, we have to modify EmployeeBooking_MainFlow, to transfer a call to our Contact Flow for Authentication
+(EmployeeBooking_Authentication).
+
 
 
 
