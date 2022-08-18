@@ -1,0 +1,203 @@
+As of 8.aug.2022, EmployeeBooking_LexBot contact flow has not been implemented
+
+
+
+
+Define Hours of Operation
+
+Populate Hours of operation of our company.
+Routing > Hours of operation
+      Add new hours
+      Set Name as "EmployeeBooking_DefaultHours"
+
+
+Create two Queues
+
+Routing > Queues
+1st queue name to be "EmployeeBooking_Authenticated"
+2nd queue name to be "EmployeeBooking_Unknown"
+
+
+Create a Routing Profile
+Users > Routing Profiles
+
+Name the routing profile as "EmployeeBooking_Default
+
+User Creation
+
+We are creating an Agent who will answer the telephone calls.
+
+Users > User Management 
+
+Create Contact Flows
+
+We are going to build two new contact flows (EmployeeBooking_TransferToQueue & EmployeBooking_MainFlow) 
+and use one default contact flow (Default Customer Queue) to build the scenario as per below.
+
+When a caller calls the contact center, EmployeeBooking_Mainflow will play welcome message and 
+sets the working queue. Further it will check hours of operations, set the call recording 
+behaviour for both agent and customer and plays the wait treatment music.
+
+Contact Flows:
+
+  0.  EmployeeBooking_AgentWhisper
+      See  https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module3/whisperflow
+      Code is in : ./Code/EmployeeBooking_AgentWhisper
+
+
+  1.  EmployeeBooking_TransferToQueue. 
+      See Call Flow-1.png.
+      Code is in ./Code/EmployeeBooking_TransferToQueue
+
+  2. Default Customer Queue is used as the wait treatment by our two queues. 
+
+  3. EmployeeBooking_MainFlow - In this module, our main flow will stay simple, giving a welcome message
+     and transferring to our EmployeeBooking_TransferToQueue flow, which we created earlier.
+     Code is in ./Code/EmployeeBooking_MainFlow
+
+     Before the welcome message, we want to give a ‘chime’, which will be uploaded as a static announcement (prompt).
+
+     a. create a prompt
+        Routing>Prompts
+        Prompt name : WelcomeChime
+        Use the Welcome Chime from ./Code or from 
+        here https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module1/contactflows/contanctflowmainflow 
+        as the recording.
+
+     b. Connect main Contact Flow to our Phone Number
+        Chanells --> Phone Numbers
+
+   4. Add notes about testing the call flow
+      You should be able to hear the Welcome Chime, Welcome Message, Queue Message, and music while waiting in the queue
+
+
+Amazon Connect and Amazon Lex - Skipping this as of 5.Aug.2022. Do this step later on.
+
+
+Creating Lambda
+
+Improve the contact flow created in the previous module by designing an Amazon Connect dynamic flow, allow employee
+authentication, and greet and transfer authenticated employees to designated queue. We will use AWS Lambda and
+Amazon DynamoDB for the purpose.
+
+Follow steps in https://catalog.us-east-1.prod.workshops.aws/workshops/cf45bce8-f0a0-4c0d-83e6-ae510931c091/en-US/module3
+
+"Setup Greeting (Whisperflow)" is already is in our code. So skip this step.
+
+
+Whisper message I heard : EmployeeBooking Unknown
+
+
+
+------------
+EmployeeBooking_Authentication contact flow
+
+Modify "Invoke AWS Lambda function"
+    Update the ARN field with your own Lambda ARN
+
+
+Understanding the contact flow:
+
+   1. The Lambda function can either be a success, or it can return an error.
+   If the Lambda function fails, we are going to set a Contact Attribute, which can be used later in the flow, displayed in agent
+   application or stored in Contact Trace Records. In this case, we want to track what happened with the authentication process, hence 
+   setting EmployeeLookup=PhoneNumber-Failed (which means that we tried to find the employee by phone number, but there was an error)
+
+
+   2. If Lambda was successful, we have to check the result returned by Lambda. In our case, we want the attribute External > EmployeeType. Expecting results:
+
+    Unknown phone number (EmployeeType = 0) or
+    Existing Phone Number,
+
+   but the employee has to enter EmployeePIN (EmployeeType = 2).
+
+   If we get anything else (EmployeeType not 0 nor 2), we are taking the fail path from point number 1.
+
+   3. If our Lambda function returns Unknown, we are going to set the Contact Attribute, and move to the next step in our scenario – ask
+      the customer for their EmployeeID (see point number 13).
+
+   4. If our Lambda function returns “2” – Ask for PIN, we are going to play the Welcome message first, greeting the employee by their name.
+
+      Note: We are using the Amazon Polly text-to-speech engine, and simply providing the employee’s name as an external attribute, received from
+      our Lambda function ($.External.EmployeeName).
+
+   5. In the next step, we are asking for their PIN, by using Store Customer Input node:
+
+   6. Using the stored customer input, we are going to invoke our Lambda function once again, trying to authenticate our caller. In this case, we are
+      passing 2 parameters: Customer Number (as PhoneNumber) and System> Stored Customer Input (as EmployeePIN).
+
+      Note: You will need to update the ARN field with your own Lambda ARN.
+
+   7. Next step is to check the result of our Lambda function. If it fails, we are going to set Contact Attribute EmployeeLookup=EmployeePIN-Error, 
+      which will help us to trace errors with Lambda function. We are expecting to get either “1” (Employee Authenticated) or “3” (Wrong PIN). If 
+      we don’t get any of these, we are taking the fail path with setting the EmployeeLookup=EmployeePIN-Error.
+
+   8. If the employee has been successfully authenticated (EmployeeType=1), we are setting the Contact Attributes and playing the Successful 
+      Authentication message.
+
+   9. In the next step, since this is a successfully authenticated employee, we want to Set working queue as EmployeeBooking_Autenticated.
+
+  10. If the Set working queue was successful, we are transferring the call to EmployeeBooking_LexBot flow, using Transfer to flow node
+      NOTE: As of 6.aug.2022, I have not implemented the EmployeeBooking_LexBot 
+   
+  11. If there was an Error, we are disconnecting the call, after a message.
+
+  12. However, if the caller entered a wrong PIN, our Lambda function is going to return EmployeeType=3, hence we are going to set the
+      Contact Attribute EmployeeLookup=EmployeePIN-Wrong, then play a message that PIN was invalid. In a production environment, we would
+      normally ask the caller to re-enter their PIN, however, for the purpose of this lab, we are offering a transfer to an agent.
+
+  13. Going back to the branch where the employee was not recognized by their phone number, we are going to play a Welcome message, and ask the
+      employee to enter their EmployeeID.
+
+  14. If the caller press number 1, we are going to ask for their EmployeeID and EmployeePIN.
+
+  15. We have stored our first customer input (EmployeeID) in Contact Attribute CI_EmployeeID, so that we can get another customer input
+      (EmployeePIN) and then send both inputs to our Lambda function.
+
+  16. Having both parameters collected from the caller, we are invoking our Lambda function, passing them as parameters.
+
+      Note: You have to update the ARN field with your own Lambda ARN.
+
+  17. Similar to previous steps, we have to check the result of our Lambda function.
+
+  18. If our Lambda function returned CustomerType=0, our EmployeeID is not recognized. CustomerType=1 indicates that employee has been 
+      authenticated and we can transfer it to our EmployeeBooking_Authenticated queue. CustomerType=3 indicates that caller entered the wrong PIN.
+
+      Note: In a production flow, we would ask the caller to re-enter EmployeeID and EmployeePIN, however for this lab, we are simply offering a transfer
+      to agents
+
+  19. If the caller has been successfully authenticated, we are going to greet by Employee Name, and also set Contact Attributes CustomerLookup=EmployeeID, 
+      so that we can trace that caller has been authenticated by entering EmployeeID. At the same time, we also set EmployeeName, so that we can play it to the agent.
+
+  20. In the next step, since this is a successfully authenticated employee, we want to Set working queue as EmployeeBooking_Autenticated.
+
+  21. If the Set working queue was successful, we are transferring the call to EmployeeBooking_LexBot flow, using Transfer to flow node.
+
+  22. Otherwise, we are disconnecting the call, after an error message
+
+  
+
+Connecting Flows
+
+Notes:
+I have modifed the tutorial "EmployeeBooking_Authentication" to not to call the EmployeeBooking_LexBot.
+
+1st Added a play prompt to say "Employee have successfully authenticated. Not calling Lex Bot, terminating the call"
+2nd. Added a play prompt to say "Hi, $.External.EmployeeName . You have successfully authenticated. Not calling Lex Bot. Call is Terminated"
+
+
+As a final step in this module, we have to modify EmployeeBooking_MainFlow, to transfer a call to our Contact Flow for Authentication
+(EmployeeBooking_Authentication).
+
+
+
+
+
+
+
+
+
+
+
+
+

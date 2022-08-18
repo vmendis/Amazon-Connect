@@ -1,0 +1,83 @@
+ReturnResult.EmployeeType = 0; //Unknown Employee
+ReturnResult.EmployeeType = 1; //Authenticated
+ReturnResult.EmployeeType = 2; //Ask for PIN
+ReturnResult.EmployeeType = 3; //PIN is wrong
+
+
+NOTE: The responses from the Lambda testing is given here with the test name for clarity.
+
+1. First test event is going to cover the “Unknown” phone number scenario:
+
+Test Event Name
+Unknown
+
+Response
+{
+  "EmployeeType": 0,
+  "EmployeeName": "Unknown",
+  "EmployeePIN": null
+}
+
+2. Second test is with a PhoneNumber for an existing employee.
+
+Test Event Name
+Known
+
+Response
+{
+  "EmployeeID": "101",
+  "EmployeeName": "Virantha",
+  "EmployeePIN": null,
+  "EmployeeType": 2
+}
+
+
+3. Third event, we are going to send EmployeePIN with a PhoneNumber for an existing employee,
+so that we can complete the process of authentication.
+
+Test Event Name
+Emp_ID_and_Emp_PIN
+
+Response
+{
+  "EmployeeID": "101",
+  "EmployeeName": "Virantha",
+  "EmployeePIN": null,
+  "EmployeeType": 1
+}
+
+4. In this event, we are going to send EmployeeID and EmployeePIN (to cover the scenario when
+an employee is calling from an unknown phone number)
+
+Test Event Name
+Emp_ID_and_Emp_PIN
+
+Response
+{
+  "EmployeeID": "101",
+  "EmployeeName": "Virantha",
+  "EmployeePIN": null,
+  "EmployeeType": 1
+}
+
+5. The final event is going to send EmployeeID, but wrong EmployeePIN
+
+EmpID_Wrong_EmpPin
+
+Response
+{
+  "EmployeeID": "101",
+  "EmployeeName": "Virantha",
+  "EmployeePIN": null,
+  "EmployeeType": 3
+}
+
+
+
+Testing
+
+1. Known phone number --> Asks for PIN -- > Enter PIN --> "Employee have successfully authenticated. Not calling Lex Bot, terminating the call"
+
+2. Known phone number --> Asks for PIN -- > Enter WRONG PIN --> "Sorry Pin invalid"  --> "Press 1 for an Agent"
+
+
