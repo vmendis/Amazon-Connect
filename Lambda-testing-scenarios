@@ -26,7 +26,7 @@ Known
 Response
 {
   "EmployeeID": "101",
-  "EmployeeName": "Githal",
+  "EmployeeName": "Virantha",
   "EmployeePIN": null,
   "EmployeeType": 2
 }
@@ -41,7 +41,7 @@ Emp_ID_and_Emp_PIN
 Response
 {
   "EmployeeID": "101",
-  "EmployeeName": "Githal",
+  "EmployeeName": "Virantha",
   "EmployeePIN": null,
   "EmployeeType": 1
 }
@@ -55,7 +55,7 @@ Emp_ID_and_Emp_PIN
 Response
 {
   "EmployeeID": "101",
-  "EmployeeName": "Githal",
+  "EmployeeName": "Virantha",
   "EmployeePIN": null,
   "EmployeeType": 1
 }
@@ -67,7 +67,7 @@ EmpID_Wrong_EmpPin
 Response
 {
   "EmployeeID": "101",
-  "EmployeeName": "Githal",
+  "EmployeeName": "Virantha",
   "EmployeePIN": null,
   "EmployeeType": 3
 }
@@ -78,4 +78,6 @@ Testing
 
 1. Known phone number --> Asks for PIN -- > Enter PIN --> "Employee have successfully authenticated. Not calling Lex Bot, terminating the call"
 
-2. Known phone number --> Asks for PIN -- > Enter WRONG PIN --> "Sorry Pin invalid"  --> Press 1 for an Agent"
+2. Known phone number --> Asks for PIN -- > Enter WRONG PIN --> "Sorry Pin invalid"  --> "Press 1 for an Agent"
+
+
